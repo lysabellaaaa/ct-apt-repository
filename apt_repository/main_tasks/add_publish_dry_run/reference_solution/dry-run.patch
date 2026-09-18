@@ -1,0 +1,22 @@
+diff --git a/repoctl.sh b/repoctl.sh
+--- a/repoctl.sh
++++ b/repoctl.sh
+@@ -5,4 +5,18 @@
+ case "${1:-}" in
++    dry-run)
++        [[ $# == 2 ]] || { echo 'usage: repoctl.sh dry-run PACKAGE.deb' >&2; exit 2; }
++        package=$(dpkg-deb --field "$2" Package)
++        if [[ -z "$package" ]]; then
++            echo 'Package metadata is missing a package name' >&2
++            exit 2
++        fi
++        if grep -Fxq -- "$package" /app/approved.txt; then
++            decision=APPROVED
++        else
++            decision=QUARANTINED
++        fi
++        printf '%s\t%s\n' "$package" "$decision"
++        ;;
+     publish)
+         [[ $# == 2 ]] || { echo 'usage: repoctl.sh publish PACKAGE.deb' >&2; exit 2; }
+         package=$(dpkg-deb --field "$2" Package)

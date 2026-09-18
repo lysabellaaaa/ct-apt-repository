@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+*.eval
+solution.json
+.ruff_cache/
+.compose-*.yml
